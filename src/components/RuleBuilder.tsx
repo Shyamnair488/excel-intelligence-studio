@@ -19,6 +19,7 @@ export function RuleBuilder() {
     workbook, operations, analysisName, setAnalysisName,
     addOp, updateOp, removeOp, duplicateOp, moveOp,
   } = useStore();
+  const [mode, setMode] = useState<"visual" | "json">("visual");
   if (!workbook) return null;
   const sheetNames = workbook.sheets.map((s) => s.name);
 
