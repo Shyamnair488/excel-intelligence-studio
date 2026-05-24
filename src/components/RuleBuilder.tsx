@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useStore, newId, type Operation, type OpType } from "@/lib/store";
 import {
   Filter, Sigma, Layers, GitMerge, FunctionSquare,
-  Trash2, Copy, ArrowUp, ArrowDown, Plus,
+  Trash2, Copy, ArrowUp, ArrowDown, Plus, Blocks, Braces,
 } from "lucide-react";
+import { RulesJsonEditor } from "./RulesJsonEditor";
 
 const OP_META: Record<OpType, { label: string; icon: typeof Filter; accent: string }> = {
   filter: { label: "Filter", icon: Filter, accent: "from-sky-500 to-cyan-400" },
