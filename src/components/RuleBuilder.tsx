@@ -135,6 +135,8 @@ export function RuleBuilder() {
           })}
         </ol>
       )}
+        </>
+      )}
     </div>
   );
 }
