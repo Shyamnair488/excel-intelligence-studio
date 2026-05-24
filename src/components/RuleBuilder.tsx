@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useStore, newId, type Operation, type OpType } from "@/lib/store";
 import {
   Filter, Sigma, Layers, GitMerge, FunctionSquare,
-  Trash2, Copy, ArrowUp, ArrowDown, Plus,
+  Trash2, Copy, ArrowUp, ArrowDown, Plus, Blocks, Braces,
 } from "lucide-react";
+import { RulesJsonEditor } from "./RulesJsonEditor";
 
 const OP_META: Record<OpType, { label: string; icon: typeof Filter; accent: string }> = {
   filter: { label: "Filter", icon: Filter, accent: "from-sky-500 to-cyan-400" },
@@ -17,6 +19,7 @@ export function RuleBuilder() {
     workbook, operations, analysisName, setAnalysisName,
     addOp, updateOp, removeOp, duplicateOp, moveOp,
   } = useStore();
+  const [mode, setMode] = useState<"visual" | "json">("visual");
   if (!workbook) return null;
   const sheetNames = workbook.sheets.map((s) => s.name);
 
@@ -50,16 +53,40 @@ export function RuleBuilder() {
             {operations.length} operation{operations.length === 1 ? "" : "s"} — executed top-to-bottom.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <label className="text-xs text-muted-foreground">Analysis name</label>
-          <input
-            value={analysisName}
-            onChange={(e) => setAnalysisName(e.target.value)}
-            className="rounded-md border border-border bg-input px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          />
+        <div className="flex items-center gap-3">
+          <div className="flex rounded-lg border border-border bg-secondary/40 p-0.5">
+            <button
+              onClick={() => setMode("visual")}
+              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition ${
+                mode === "visual" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Blocks className="h-3.5 w-3.5" /> Visual
+            </button>
+            <button
+              onClick={() => setMode("json")}
+              className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition ${
+                mode === "json" ? "bg-primary text-primary-foreground shadow" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              <Braces className="h-3.5 w-3.5" /> JSON
+            </button>
+          </div>
+          <div className="flex items-center gap-2">
+            <label className="text-xs text-muted-foreground">Analysis name</label>
+            <input
+              value={analysisName}
+              onChange={(e) => setAnalysisName(e.target.value)}
+              className="rounded-md border border-border bg-input px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+            />
+          </div>
         </div>
       </header>
 
+      {mode === "json" ? (
+        <RulesJsonEditor />
+      ) : (
+        <>
       <div className="mb-4 flex flex-wrap gap-2">
         {(Object.keys(OP_META) as OpType[]).map((t) => {
           const M = OP_META[t];
@@ -107,6 +134,8 @@ export function RuleBuilder() {
             );
           })}
         </ol>
+      )}
+        </>
       )}
     </div>
   );
